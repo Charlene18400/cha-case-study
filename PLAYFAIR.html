@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=[device-width], initial-scale=1.0" />
+    <title>Secure Data in Application Development: A Cryptographic Approach</title>
+
+    <!-- CSS  -->
+    <link rel="stylesheet" href="style.css" />
+
+    <!-- GOOGLE FONTS-->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Font Awesome -->
+    <script
+      defer
+      src="https://use.fontawesome.com/releases/v5.0.7/js/all.js"
+    ></script>
+  </head>
+
+  <body>
+    <!------ HEADER ------->
+
+    <section class="header2">
+      <nav>
+        <a href="index.html"><img src="images/Playfair.png" alt="logo" /></a>
+        <div class="nav-links" id="nav-links">
+          <i class="nav-icons fa fa-times" onclick="hideMenu()"></i>
+
+          <ul>
+            <li><a href="HOME.html">HOME</a></li>
+            <li><a href="CAESAR.html">CAESAR</a></li>
+            <li><a href="VIGENERE.html">VIGENERE</a></li>
+            <li><a href="PLAYFAIR.html">PLAYFAIR</a></li>
+            <li><a href="ONE TIME PAD.html">ONE TIME PAD</a></li>
+          </ul>
+        </div>
+        <i class="nav-icons fa fa-bars" onclick="showMenu()"></i>
+      </nav>
+
+      <div class="text-box">
+        <h1>PLAYFAIR</h1>
+        <p>A symmetric encryption technique that employs a 5x5 square matrix of letters, typically constructed from a keyword. It operates on pairs of letters and applies a set of rules to determine the ciphertext letter for each pair, enhancing security by breaking the text into blocks and encrypting them separately.</p>
+        </p>
+      </div>
+    </section>
+
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Playfair Cipher</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+    .container {
+        max-width: 500px;
+        margin: 50px auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    label {
+        display: block;
+        margin-bottom: 10px;
+    }
+    input[type="text"],
+    input[type="number"] {
+        width: calc(100% - 22px); /* Adjusted width */
+        padding: 10px;
+        margin-bottom: 10px; /* Adjusted margin */
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+    button {
+        padding: 10px 20px;
+        background-color: #ff00dd;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-bottom: 10px; /* Adjusted margin */
+    }
+    button:hover {
+        background-color: #b3008c;
+    }
+    .output {
+        margin: 50px auto;
+        margin-top: 20px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+    .output-label {
+        margin-bottom: 10px; /* Adjusted margin */
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Playfair Cipher</h2>
+    <label for="plaintext">Plaintext:</label>
+    <input type="text" id="plaintext">
+    <label for="key">Key:</label>
+    <input type="text" id="key">
+    <button onclick="encrypt()">Encrypt</button>
+    <button onclick="decrypt()">Decrypt</button>
+    <label class="output-label" for="ciphertext">Ciphertext:</label> <!-- Adjusted margin for consistency -->
+    <div class="output">
+        <p id="ciphertext"></p>
+    </div>
+</div>
+
+<script>
+    function createPlayfairMatrix(key) {
+        const alphabet = "ABCDEFGHIKLMNOPQRSTUVWXYZ"; // excluding 'J' as per Playfair cipher rules
+        const keyWithoutJ = key.toUpperCase().replace(/J/g, "");
+        const keySet = new Set(keyWithoutJ);
+        const matrix = [];
+        let currentLetterIndex = 0;
+
+        for (let i = 0; i < 5; i++) {
+            matrix[i] = [];
+            for (let j = 0; j < 5; j++) {
+                if (currentLetterIndex < keyWithoutJ.length) {
+                    matrix[i][j] = keyWithoutJ[currentLetterIndex++];
+                    keySet.delete(matrix[i][j]);
+                } else {
+                    const remainingLetters = alphabet.split("").filter(letter => !keySet.has(letter));
+                    matrix[i][j] = remainingLetters.shift();
+                }
+            }
+        }
+
+        return matrix;
+    }
+
+    function findPosition(matrix, letter) {
+        for (let i = 0; i < 5; i++) {
+            for (let j = 0; j < 5; j++) {
+                if (matrix[i][j] === letter) {
+                    return [i, j];
+                }
+            }
+        }
+    }
+
+    function playfairEncrypt(plaintext, key) {
+        const matrix = createPlayfairMatrix(key);
+        const sanitizedPlaintext = plaintext.toUpperCase().replace(/[^A-Z]/g, "").replace(/J/g, "I");
+        let ciphertext = "";
+
+        for (let i = 0; i < sanitizedPlaintext.length; i += 2) {
+            let firstLetter = sanitizedPlaintext[i];
+            let secondLetter = (i + 1 < sanitizedPlaintext.length) ? sanitizedPlaintext[i + 1] : "X";
+
+            if (firstLetter === secondLetter) {
+                secondLetter = "X";
+                i--;
+            }
+
+            const [row1, col1] = findPosition(matrix, firstLetter);
+            const [row2, col2] = findPosition(matrix, secondLetter);
+
+            if (row1 === row2) { // Same row
+                ciphertext += matrix[row1][(col1 + 1) % 5];
+                ciphertext += matrix[row2][(col2 + 1) % 5];
+            } else if (col1 === col2) { // Same column
+                ciphertext += matrix[(row1 + 1) % 5][col1];
+                ciphertext += matrix[(row2 + 1) % 5][col2];
+            } else { // Rectangle
+                ciphertext += matrix[row1][col2];
+                ciphertext += matrix[row2][col1];
+            }
+        }
+
+        return ciphertext;
+    }
+
+    function playfairDecrypt(ciphertext, key) {
+        const matrix = createPlayfairMatrix(key);
+        let plaintext = "";
+
+        for (let i = 0; i < ciphertext.length; i += 2) {
+            let firstLetter = ciphertext[i];
+            let secondLetter = (i + 1 < ciphertext.length) ? ciphertext[i + 1] : "X";
+
+            const [row1, col1] = findPosition(matrix, firstLetter);
+            const [row2, col2] = findPosition(matrix, secondLetter);
+
+            if (row1 === row2) { // Same row
+                plaintext += matrix[row1][(col1 - 1 + 5) % 5];
+                plaintext += matrix[row2][(col2 - 1 + 5) % 5];
+            } else if (col1 === col2) { // Same column
+                plaintext += matrix[(row1 - 1 + 5) % 5][col1];
+                plaintext += matrix[(row2 - 1 + 5) % 5][col2];
+            } else { // Rectangle
+                plaintext += matrix[row1][col2];
+                plaintext += matrix[row2][col1];
+            }
+        }
+
+        return plaintext;
+    }
+
+    function encrypt() {
+        const plaintext = document.getElementById('plaintext').value.toUpperCase();
+        const key = document.getElementById('key').value.toUpperCase();
+        const ciphertext = playfairEncrypt(plaintext, key);
+        document.getElementById('ciphertext').innerText = ciphertext;
+    }
+
+    function decrypt() {
+        const ciphertext = document.getElementById('plaintext').value.toUpperCase();
+        const key = document.getElementById('key').value.toUpperCase();
+        const plaintext = playfairDecrypt(ciphertext, key);
+        document.getElementById('ciphertext').innerText = plaintext;
+    }
+</script>
+
+</body>
+</html>

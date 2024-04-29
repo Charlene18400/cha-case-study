@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=[device-width], initial-scale=1.0" />
+    <title>Philippines</title>
+
+    <!-- CSS  -->
+    <link rel="stylesheet" href="style.css" />
+
+    <!-- GOOGLE FONTS-->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Font Awesome -->
+    <script
+      defer
+      src="https://use.fontawesome.com/releases/v5.0.7/js/all.js"
+    ></script>
+  </head>
+
+  <body>
+    <!------ HEADER ------->
+
+    <section class="header5">
+      <nav>
+        <a href="index.html"><img src="images/Vigenere.png" alt="logo" /></a>
+        <div class="nav-links" id="nav-links">
+          <i class="nav-icons fa fa-times" onclick="hideMenu()"></i>
+
+          <ul>
+            <li><a href="home.html">HOME</a></li>
+            <li><a href="CAESAR.html">CAESAR</a></li>
+            <li><a href="VIGENERE.html">VIGENERE</a></li>
+            <li><a href="PLAYFAIR.html">PLAYFAIR</a></li>
+            <li><a href="ONE TIME PAD.html">ONE TIME PAD</a></li>
+          </ul>
+        </div>
+        <i class="nav-icons fa fa-bars" onclick="showMenu()"></i>
+      </nav>
+
+      <div class="text-box">
+        <h1>VIGENERE</h1>
+        <p>
+          A polyalphabetic substitution cipher where each letter in the plaintext is shifted according to a keyword. Unlike Caesar cipher, the Vigenère cipher uses a keyword to determine the shift value for each letter, making it more resistant to frequency analysis.</p>
+      </p>
+    </div>
+  </section>
+      
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Vigenere Cipher</title>
+      <style>
+        body {
+          font-family: Arial, sans-serif;
+        }
+         .container {
+                max-width: 500px;
+                margin: 50px auto;
+                padding: 20px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+          display: block;
+          margin-bottom: 10px;
+        }
+        input[type="text"], textarea {
+          width: 100%;
+          padding: 10px;
+          margin-bottom: 20px;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+        }
+        button {
+          padding: 10px 20px;
+          background-color: #ff00dd;
+          color: #fff;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+        }
+        button:hover {
+          background-color: #a0459b;
+        }
+      </style>
+      </head>
+      <body>
+      <div class="container">
+        <h2>Vigenere Cipher</h2>
+        <label for="text">Enter Text:</label>
+        <textarea id="text" rows="5"></textarea>
+        <label for="key">Enter Key:</label>
+        <input type="text" id="key">
+        <button onclick="encrypt()">Encrypt</button>
+        <button onclick="decrypt()">Decrypt</button>
+        <label for="result">Result:</label>
+        <textarea id="result" rows="5" readonly></textarea>
+      </div>
+      
+      <script>
+        function charToIndex(char) {
+          return char.charCodeAt(0) - 65;
+        }
+      
+        function indexToChar(index) {
+          return String.fromCharCode(index + 65);
+        }
+      
+        function encrypt() {
+          var text = document.getElementById("text").value.toUpperCase();
+          var key = document.getElementById("key").value.toUpperCase();
+          var result = "";
+          for (var i = 0; i < text.length; i++) {
+            var charCode = text.charCodeAt(i);
+            var keyCharCode = key.charCodeAt(i % key.length);
+            if (charCode >= 65 && charCode <= 90) {
+              var encryptedCharCode = (charToIndex(text[i]) + charToIndex(key[i % key.length])) % 26;
+              result += indexToChar(encryptedCharCode);
+            } else {
+              result += text.charAt(i);
+            }
+          }
+          document.getElementById("result").value = result;
+        }
+      
+        function decrypt() {
+          var text = document.getElementById("text").value.toUpperCase();
+          var key = document.getElementById("key").value.toUpperCase();
+          var result = "";
+          for (var i = 0; i < text.length; i++) {
+            var charCode = text.charCodeAt(i);
+            var keyCharCode = key.charCodeAt(i % key.length);
+            if (charCode >= 65 && charCode <= 90) {
+              var decryptedCharCode = (charToIndex(text[i]) - charToIndex(key[i % key.length]) + 26) % 26;
+              result += indexToChar(decryptedCharCode);
+            } else {
+              result += text.charAt(i);
+            }
+          }
+          document.getElementById("result").value = result;
+        }
+      </script>
+      </body>
+      </html>
+
+      
+    </section>
+
+    <script src="index.js"></script>
+  </body>
+</html>
